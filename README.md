@@ -22,69 +22,54 @@ This repository provides the API server for a university management system. It i
 - JWT + bcrypt for auth
 - ESLint + Prettier for linting/formatting
 
-## Project structure
-
-Top-level files:
-
-- `package.json`, `tsconfig.json`, `vercel.json`, `eslint.config.mjs`
-
-Key `src/` layout (abridged):
+## 📁 Project Structure
 
 ```
 src/
-  app.ts
-  server.ts
-  app/
-    config/
-      index.ts
-    middlewares/
-      auth.ts
-      globalErrorHandler.ts
-      notFound.ts
-      validateRequest.ts
-    modules/
-      academicFaculty/
-        academicFaculty.controller.ts
-        academicFaculty.interface.ts
-        academicFaculty.model.ts
-        academicFaculty.route.ts
-        academicFaculty.service.ts
-        academicFaculty.validation.ts
-      academicSemester/
-        academicSemester.constants.ts
-        academicSemester.controller.ts
-        academicSemester.interface.ts
-        academicSemester.model.ts
-        academicSemester.route.ts
-        academicSemester.service.ts
-        academicSemester.validation.ts
-      auth/
-        auth.controller.ts
-        auth.route.ts
-        auth.service.ts
-        auth.validation.ts
-      student/
-        student.controller.ts
-        student.interface.ts
-        student.model.ts
-        student.route.ts
-        student.service.ts
-        student.validation.ts
-      user/
-        user.controller.ts
-        user.interface.ts
-        user.model.ts
-        user.route.ts
-        user.service.ts
-        user.utils.ts
-        user.validation.ts
-    routes/
-      index.ts
-    utils/
-      catchAsynce.ts
-      sendResponse.ts
-  seed/
-    createAdmin.ts
+├── app.ts                    # Express app bootstrap
+├── server.ts                 # Server entry (listen)
+├── app/
+│   ├── config/               # Configuration loaders (env, db)
+│   │   └── index.ts
+│   ├── middlewares/          # Global and route middlewares
+│   │   ├── auth.ts
+│   │   ├── globalErrorHandler.ts
+│   │   ├── notFound.ts
+│   │   └── validateRequest.ts
+│   ├── modules/              # Domain modules (MVC per feature)
+│   │   ├── auth/
+│   │   │   ├── auth.controller.ts
+│   │   │   ├── auth.route.ts
+│   │   │   ├── auth.service.ts
+│   │   │   └── auth.validation.ts
+│   │   ├── user/
+│   │   │   ├── user.controller.ts
+│   │   │   ├── user.route.ts
+│   │   │   ├── user.service.ts
+│   │   │   ├── user.model.ts
+│   │   │   ├── user.interface.ts
+│   │   │   └── user.validation.ts
+│   │   ├── student/
+│   │   │   ├── student.controller.ts
+│   │   │   ├── student.route.ts
+│   │   │   ├── student.service.ts
+│   │   │   └── student.model.ts
+│   │   ├── academicFaculty/
+│   │   │   ├── academicFaculty.controller.ts
+│   │   │   ├── academicFaculty.service.ts
+│   │   │   └── academicFaculty.model.ts
+│   │   └── academicSemester/
+│   │       ├── academicSemester.controller.ts
+│   │       ├── academicSemester.service.ts
+│   │       └── academicSemester.model.ts
+│   ├── routes/               # Route aggregator
+│   │   └── index.ts
+│   └── utils/                # Helpers and response utilities
+│       ├── catchAsynce.ts
+│       └── sendResponse.ts
+├── seed/                     # Seed scripts (create admin, etc.)
+│   └── createAdmin.ts
+└── types/                    # Global TypeScript types (if any)
 ```
 
 ## Environment
