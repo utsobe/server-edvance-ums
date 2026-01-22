@@ -1,47 +1,62 @@
 import { model, Schema } from 'mongoose';
 import { TUser } from './user.interface';
-import config from '../../config';
-import bcrypt from 'bcrypt';
 
 const userSchema = new Schema<TUser>(
   {
-    id: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    needsPasswordChange: { type: Boolean, default: true },
+    id: { type: String, unique: true, sparse: true },
+    name: { type: String, required: true, trim: true },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      index: true,
+      trim: true,
+    },
     role: {
       type: String,
-      enum: ['student', 'admin', 'faculty'],
+      enum: ['student', 'lecturer', 'admin'],
       required: true,
     },
+    passwordHash: { type: String, required: true, select: false },
+    avatar: { type: String },
+    department: { type: String },
+    course: { type: String },
+    studentId: { type: String },
+    employeeId: { type: String },
+    year: { type: Number },
+    gpa: { type: Number },
+    enrolledSubjects: { type: [String], default: [] },
+    subjects: { type: [String], default: [] },
+    permissions: { type: [String], default: [] },
     status: {
       type: String,
-      enum: ['in-progress', 'blocked'],
-      default: 'in-progress',
-      required: true,
+      enum: ['active', 'blocked'],
+      default: 'active',
     },
     isDeleted: { type: Boolean, default: false },
   },
   {
     timestamps: true,
+    toJSON: {
+      transform: (_doc, ret) => {
+        ret.id = ret._id.toString();
+        delete ret._id;
+        delete ret.__v;
+        delete ret.passwordHash;
+      },
+    },
   },
 );
 
-// pre save middileware / hook: will work before saving the data
-userSchema.pre('save', async function (next) {
-  //   console.log(this, 'pre hook: we will save the data');
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this;
-  // Hash the password before saving
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bcrypt_salt_rounds),
-  );
+// Exclude soft-deleted users from find queries by default
+userSchema.pre('find', function (next) {
+  this.where({ isDeleted: { $ne: true } });
   next();
 });
 
-// post save middileware / hook: will work after saving the data
-userSchema.post('save', function (doc, next) {
-  doc.password = '';
+userSchema.pre('findOne', function (next) {
+  this.where({ isDeleted: { $ne: true } });
   next();
 });
 

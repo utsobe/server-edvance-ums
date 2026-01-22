@@ -9,8 +9,9 @@ import router from './app/routes';
 const app: Application = express();
 
 // parser
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // application routes
 app.use('/api/v1', router);
@@ -22,9 +23,8 @@ const test = (req: Request, res: Response) => {
 
 app.get('/', test);
 
-app.use(globalErrorHandler);
-
 // handle not found
 app.use(notFound);
+app.use(globalErrorHandler);
 
 export default app;
